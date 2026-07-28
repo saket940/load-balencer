@@ -70,7 +70,7 @@ async fn proxy(
             .uri()
             .path_and_query()
             .map(|x| x.as_str())
-            .unwrap_or("/");
+            .unwrap_or("");
 
         let url = format!("{}{}", backend.url, path);
 
