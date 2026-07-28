@@ -107,7 +107,7 @@ async fn main() {
                 healthy: AtomicBool::new(true),
             },
             Backend {
-                url: "https://chatgenex.onrender.com/6743483",
+                url: "https://chatgenex.onrender.com/",
                 healthy: AtomicBool::new(true),
             },
         ],
