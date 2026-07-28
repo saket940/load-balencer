@@ -123,8 +123,11 @@ async fn main() {
     let app = Router::new()
         .route("/{*path}", any(proxy))
         .with_state(state);
-
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:8080")
+    let port: u16 = std::env::var("PORT")
+        .unwrap_or_else(|_| "8080".to_string())
+        .parse()
+        .unwrap();
+    let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{port}"))
         .await
         .unwrap();
 
