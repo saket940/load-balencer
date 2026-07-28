@@ -99,15 +99,15 @@ async fn main() {
         client: Client::new(),
         backends: vec![
             Backend {
-                url: "http://localhost:3001",
+                url: "https://portfolio-saket.onrender.com/",
                 healthy: AtomicBool::new(true),
             },
             Backend {
-                url: "http://localhost:3002",
+                url: "https://portfoliobackend-i9jb.onrender.com/project",
                 healthy: AtomicBool::new(true),
             },
             Backend {
-                url: "http://localhost:3003",
+                url: "https://chatgenex.onrender.com/6743483",
                 healthy: AtomicBool::new(true),
             },
         ],
