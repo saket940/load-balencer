@@ -26,30 +26,34 @@ struct AppState {
     counter: AtomicUsize,
 }
 
-// Health check every 13 minutes
+
 async fn health_check(state: Arc<AppState>) {
     loop {
         println!("Running health check...");
 
         for backend in &state.backends {
-            let healthy = match state.client.get(backend.url).send().await {
-                Ok(resp) => resp.status().is_success(),
-                Err(_) => false,
-            };
+            let health_url = format!("{}/", backend.url.trim_end_matches('/'));
 
-            backend.healthy.store(healthy, Ordering::Relaxed);
-
-            if healthy {
-                println!("✅ {}", backend.url);
-            } else {
-                println!("❌ {}", backend.url);
+            match state.client.get(&health_url).send().await {
+                Ok(resp) if resp.status().is_success() => {
+                    backend.healthy.store(true, Ordering::Relaxed);
+                    println!("✅ {} is UP", backend.url);
+                }
+                Ok(resp) => {
+                    backend.healthy.store(false, Ordering::Relaxed);
+                    println!("❌ {} returned {}", backend.url, resp.status());
+                }
+                Err(err) => {
+                    backend.healthy.store(false, Ordering::Relaxed);
+                    println!("❌ {} is DOWN ({})", backend.url, err);
+                }
             }
         }
 
-        sleep(Duration::from_secs(13 * 60)).await;
+        // Wait 270 seconds (4 minutes 30 seconds)
+        sleep(Duration::from_secs(270)).await;
     }
 }
-
 // Round-robin proxy
 async fn proxy(
     State(state): State<Arc<AppState>>,
