@@ -26,13 +26,15 @@ struct AppState {
     counter: AtomicUsize,
 }
 
-
 async fn health_check(state: Arc<AppState>) {
     loop {
         println!("Running health check...");
 
         for backend in &state.backends {
-            let health_url = format!("{}/", backend.url.trim_end_matches('/'));
+            let health_url = format!(
+                "{}/api/internships",
+                backend.url.trim_end_matches('/')
+            );
 
             match state.client.get(&health_url).send().await {
                 Ok(resp) if resp.status().is_success() => {
@@ -41,11 +43,11 @@ async fn health_check(state: Arc<AppState>) {
                 }
                 Ok(resp) => {
                     backend.healthy.store(false, Ordering::Relaxed);
-                    println!("❌ {} returned {}", backend.url, resp.status());
+                    println!("❌ {} returned {}", health_url, resp.status());
                 }
                 Err(err) => {
                     backend.healthy.store(false, Ordering::Relaxed);
-                    println!("❌ {} is DOWN ({})", backend.url, err);
+                    println!("❌ {} is DOWN ({})", health_url, err);
                 }
             }
         }
@@ -54,6 +56,7 @@ async fn health_check(state: Arc<AppState>) {
         sleep(Duration::from_secs(270)).await;
     }
 }
+
 // Round-robin proxy
 async fn proxy(
     State(state): State<Arc<AppState>>,
