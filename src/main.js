@@ -5,8 +5,8 @@ const app = express();
 app.use(express.json());
 
 const backends = [
-  "https://web-update-alert.onrender.com",
-  "https://web-update-alert.onrender.com",
+  "https://web-update-alert.onrender.com/api/internships",
+  "https://web-update-alert.onrender.com/api/internships",
   "https://web-update-alert.onrender.com",
 ];
 let current = 0;
