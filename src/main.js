@@ -37,7 +37,7 @@ app.use(async (req, res) => {
       backend,
     });
   }
-});c
+});
 
 app.listen(8080, () => {
   console.log("Load Balancer running on http://localhost:8080");
