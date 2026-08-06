@@ -17,20 +17,21 @@ function nextBackend() {
   return backend;
 }
 
-app.all("/*", async (req, res) => {
+app.get("/api/internships", async (req, res) => {
   const backend = nextBackend();
 
   try {
-    const response = await axios({
-      method: req.method,
-      url: backend + req.originalUrl,
-      data: req.body,
-      headers: req.headers,
-      validateStatus: () => true,
-    });
+    const response = await axios.get(
+      backend + "/api/internships",
+      {
+        params: req.query,
+        validateStatus: () => true,
+      }
+    );
 
-    res.status(response.status).set(response.headers).send(response.data);
+    res.status(response.status).json(response.data);
   } catch (err) {
+    console.error(err.message);
     res.status(502).json({
       error: "Backend unavailable",
       backend,
