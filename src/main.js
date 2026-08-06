@@ -17,7 +17,7 @@ function nextBackend() {
   return backend;
 }
 
-app.use(async (req, res) => {
+app.all("/*", async (req, res) => {
   const backend = nextBackend();
 
   try {
