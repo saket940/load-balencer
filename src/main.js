@@ -5,9 +5,9 @@ const app = express();
 app.use(express.json());
 
 const backends = [
-  "http://127.0.0.1:8001",
-  "http://127.0.0.1:8002",
-  "http://127.0.0.1:8003",
+  "https://web-update-alert.onrender.com",
+  "https://web-update-alert.onrender.com",
+  "https://web-update-alert.onrender.com",
 ];
 
 let current = 0;
