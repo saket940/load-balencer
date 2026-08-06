@@ -9,7 +9,6 @@ const backends = [
   "https://web-update-alert.onrender.com",
   "https://web-update-alert.onrender.com",
 ];
-
 let current = 0;
 
 function nextBackend() {
@@ -39,6 +38,8 @@ app.use(async (req, res) => {
   }
 });
 
-app.listen(8080, () => {
-  console.log("Load Balancer running on http://localhost:8080");
+const PORT = process.env.PORT || 8080;
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Load Balancer running on port ${PORT}`);
 });
